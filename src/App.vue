@@ -1,5 +1,6 @@
 <script setup>
 import AchievementBoard from './components/AchievementBoard.vue'
+import CareCalendar from './components/CareCalendar.vue'
 import DashboardPanel from './components/DashboardPanel.vue'
 import Leaderboards from './components/Leaderboards.vue'
 import PlantForm from './components/PlantForm.vue'
@@ -37,6 +38,13 @@ const {
     </header>
 
     <DashboardPanel :achievements="achievements" :dashboard="dashboard" :goals="goals" />
+
+    <CareCalendar
+      :care-records="state.careRecords"
+      :growth-records="state.growthRecords"
+      :pest-records="state.pestRecords"
+      :plants="state.plants"
+    />
 
     <section class="main-grid">
       <div class="left-column">

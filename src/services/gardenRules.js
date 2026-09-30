@@ -1,5 +1,5 @@
 import { ACHIEVEMENTS } from '../constants/garden'
-import { daysBetween, monthOf, todayISO } from '../utils/date'
+import { addDaysISO, daysBetween, monthOf, todayISO } from '../utils/date'
 
 export function createId(prefix) {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
@@ -21,6 +21,54 @@ export function getDueWateringPlants(plants, today = todayISO()) {
     .map((plant) => ({ ...plant, wateringStatus: getWateringStatus(plant, today) }))
     .filter((plant) => plant.wateringStatus === '待浇水' || plant.wateringStatus === '已过期')
     .sort((a, b) => statusWeight(b.wateringStatus) - statusWeight(a.wateringStatus))
+}
+
+// 依据每株的浇水频率，从上次浇水日（缺省取购买日）起按周期推算预计浇水日。
+// 排程日上 elapsed === frequency，恰好命中 getWateringStatus 的「待浇水」口径，
+// 因此日历上标出的未来日期与现有待浇水提醒保持一致。
+export function getWateringDates(plant, fromISO, toISO) {
+  const anchor = plant.lastWateredDate || plant.purchaseDate
+  const frequency = Number(plant.wateringFrequency)
+  if (!anchor || !frequency || frequency < 1 || fromISO > toISO) return []
+
+  const dates = []
+  let cursor = addDaysISO(anchor, frequency)
+  while (cursor < fromISO) cursor = addDaysISO(cursor, frequency)
+  while (cursor <= toISO) {
+    dates.push(cursor)
+    cursor = addDaysISO(cursor, frequency)
+  }
+  return dates
+}
+
+// 汇总 [fromISO, toISO] 区间内所有植物的预计浇水日；today 当天的状态
+// 直接采用 getWateringStatus，使今日格子与「今日待浇水」列表完全一致。
+export function buildWateringSchedule(plants, fromISO, toISO, today = todayISO()) {
+  const todayInRange = today >= fromISO && today <= toISO
+  const schedule = []
+
+  plants.forEach((plant) => {
+    const dates = getWateringDates(plant, fromISO, toISO)
+    // 已逾期但今天不是整周期点（elapsed 不是 frequency 的整数倍）时，
+    // 排程本身不落在今天，仍需在今日格子补记，才能与待浇水提醒口径一致。
+    if (todayInRange && !dates.includes(today)) {
+      const status = getWateringStatus(plant, today)
+      if (status === '待浇水' || status === '已过期') dates.push(today)
+    }
+
+    dates.forEach((date) => {
+      schedule.push({
+        plantId: plant.id,
+        plantName: plant.name,
+        date,
+        frequency: Number(plant.wateringFrequency) || 1,
+        scheduled: true,
+        status: date === today ? getWateringStatus(plant, today) : '待浇水',
+      })
+    })
+  })
+
+  return schedule
 }
 
 export function getDashboard(plants, careRecords, growthRecords) {
