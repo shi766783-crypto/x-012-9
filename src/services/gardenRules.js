@@ -1,5 +1,5 @@
 import { ACHIEVEMENTS } from '../constants/garden'
-import { daysBetween, monthOf, todayISO } from '../utils/date'
+import { addDays, daysBetween, monthOf, todayISO } from '../utils/date'
 
 export function createId(prefix) {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
@@ -21,6 +21,30 @@ export function getDueWateringPlants(plants, today = todayISO()) {
     .map((plant) => ({ ...plant, wateringStatus: getWateringStatus(plant, today) }))
     .filter((plant) => plant.wateringStatus === '待浇水' || plant.wateringStatus === '已过期')
     .sort((a, b) => statusWeight(b.wateringStatus) - statusWeight(a.wateringStatus))
+}
+
+// 计算 (today, rangeEnd] 区间内的预计浇水日：锚点（上次浇水日，缺失时取购买日）
+// 起每经过一个浇水频率周期即为一个浇水日，与 getWateringStatus 的“待浇水”口径一致；
+// 今天（含待浇水与已过期）由 getDueWateringPlants 负责，这里只返回未来日期。
+export function getWateringSchedule(plants, rangeEndISO, today = todayISO()) {
+  const schedule = new Map()
+
+  plants
+    .filter((plant) => plant.alive !== false)
+    .forEach((plant) => {
+      const anchor = plant.lastWateredDate || plant.purchaseDate || today
+      const frequency = Math.max(1, Number(plant.wateringFrequency) || 1)
+      const elapsed = daysBetween(anchor, today)
+      // 今天之后的第一个浇水日：锚点整数倍周期上第一个严格晚于今天的日期
+      const nextOffset = (Math.floor(elapsed / frequency) + 1) * frequency - elapsed
+
+      for (let dateISO = addDays(today, nextOffset); dateISO <= rangeEndISO; dateISO = addDays(dateISO, frequency)) {
+        if (!schedule.has(dateISO)) schedule.set(dateISO, [])
+        schedule.get(dateISO).push({ id: plant.id, name: plant.name })
+      }
+    })
+
+  return schedule
 }
 
 export function getDashboard(plants, careRecords, growthRecords) {

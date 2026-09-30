@@ -450,6 +450,288 @@ dd {
   margin: 0;
 }
 
+.calendar-panel {
+  margin-top: 18px;
+}
+
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.calendar-nav strong {
+  min-width: 132px;
+  text-align: center;
+}
+
+.calendar-nav button {
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0 10px;
+  color: #2f7d4f;
+  border: 1px solid #cfdac7;
+  border-radius: 8px;
+  background: #fffef8;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.calendar-nav .calendar-today {
+  min-height: 36px;
+  padding: 0 14px;
+  color: #fff;
+  border-color: #2f7d4f;
+  background: #2f7d4f;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.calendar-nav button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 14px;
+  color: #657266;
+  font-size: 0.85rem;
+}
+
+.calendar-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legend-dot.care-water,
+.cell-chip.care-water::before {
+  background: #2f7dc9;
+}
+
+.legend-dot.care-fertilize,
+.cell-chip.care-fertilize::before {
+  background: #b4812f;
+}
+
+.legend-dot.care-other,
+.cell-chip.care-other::before {
+  background: #7c8a76;
+}
+
+.legend-dot.schedule-dot {
+  background: #5aa9e6;
+  box-shadow: 0 0 0 3px rgba(90, 169, 230, 0.22);
+}
+
+.legend-dot.due-dot {
+  background: #c96a2f;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.calendar-weekrow span {
+  padding: 4px 0 8px;
+  color: #657266;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.calendar-cells {
+  grid-auto-rows: 1fr;
+}
+
+.calendar-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  min-height: 108px;
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #e0e7d9;
+  border-radius: 8px;
+  background: #fffdf5;
+}
+
+.calendar-cell:hover {
+  border-color: #9db88e;
+}
+
+.calendar-cell.is-muted {
+  background: #f3f5ee;
+  opacity: 0.55;
+}
+
+.calendar-cell.is-today {
+  border-color: #2f7d4f;
+  box-shadow: inset 0 0 0 1px #2f7d4f;
+}
+
+.calendar-cell.is-selected {
+  border-color: #2f7d4f;
+  background: #f1f8ea;
+  box-shadow: 0 0 0 2px rgba(47, 125, 79, 0.25);
+}
+
+.calendar-date {
+  align-self: flex-start;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #465448;
+}
+
+.is-today .calendar-date {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  color: #fff;
+  border-radius: 50%;
+  background: #2f7d4f;
+}
+
+.calendar-chips {
+  display: grid;
+  gap: 4px;
+}
+
+.cell-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  padding: 2px 6px;
+  overflow: hidden;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cell-chip::before {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  content: "";
+}
+
+.cell-chip.care-water {
+  color: #1d5a94;
+  background: #e3f0fb;
+}
+
+.cell-chip.care-fertilize {
+  color: #7d561c;
+  background: #f8efd9;
+}
+
+.cell-chip.care-other {
+  color: #4f5a4b;
+  background: #ecefe8;
+}
+
+.cell-chip.chip-more {
+  color: #657266;
+  background: #f1f3ec;
+}
+
+.cell-chip.chip-more::before {
+  display: none;
+}
+
+.cell-chip.chip-schedule {
+  color: #1d5a94;
+  background: #e6f2fc;
+  border: 1px dashed #9cc8ec;
+}
+
+.cell-chip.chip-schedule::before {
+  display: none;
+}
+
+.cell-chip.chip-due {
+  color: #8a431c;
+  background: #fbe7d8;
+  font-weight: 700;
+}
+
+.cell-chip.chip-due::before {
+  background: #c96a2f;
+}
+
+.calendar-empty {
+  margin-top: 12px;
+}
+
+.calendar-detail {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid #dce5d5;
+  border-radius: 8px;
+  background: #fffdf5;
+}
+
+.calendar-detail-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.calendar-detail-heading h3 {
+  margin: 0;
+}
+
+.calendar-detail-heading span {
+  color: #657266;
+  font-size: 0.88rem;
+}
+
+.calendar-detail-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.calendar-detail-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f6f9f1;
+}
+
+.calendar-detail-list .legend-dot {
+  margin-top: 5px;
+}
+
+.calendar-detail-list p {
+  margin: 4px 0 0;
+  color: #657266;
+  font-size: 0.88rem;
+}
+
 @media (max-width: 1050px) {
   .dashboard,
   .records-grid {
@@ -495,5 +777,32 @@ dd {
   .timeline-item {
     grid-template-columns: 1fr;
     gap: 4px;
+  }
+
+  .calendar-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .calendar-nav {
+    flex-wrap: wrap;
+  }
+
+  .calendar-grid {
+    gap: 4px;
+  }
+
+  .calendar-cell {
+    min-height: 76px;
+    padding: 5px;
+  }
+
+  .cell-chip {
+    padding: 1px 4px;
+    font-size: 0.62rem;
+  }
+
+  .calendar-date {
+    font-size: 0.78rem;
   }
 }

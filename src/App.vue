@@ -1,5 +1,6 @@
 <script setup>
 import AchievementBoard from './components/AchievementBoard.vue'
+import CalendarView from './components/CalendarView.vue'
 import DashboardPanel from './components/DashboardPanel.vue'
 import Leaderboards from './components/Leaderboards.vue'
 import PlantForm from './components/PlantForm.vue'
@@ -51,6 +52,12 @@ const {
       @care="addCareRecord"
       @growth="addGrowthRecord"
       @pest="addPestRecord"
+    />
+
+    <CalendarView
+      :care-records="state.careRecords"
+      :due-plants="dueWateringPlants"
+      :plants="state.plants"
     />
 
     <Leaderboards :leaderboards="leaderboards" />
